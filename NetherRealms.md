@@ -4,65 +4,64 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-```
-``` javascript
-namespace Roli
+
+namespace NetherRealms2
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //KEY IS NOT A NUMBER or not?
-            //key -> ID
-            //VALUE -> NAME -> PARTICIPANT
-            //•	{id} #{eventName} @{participant1} @{participant2} … @{participantN}
-            string patternEvent = @"(?<id>\d+) #(?<name>[A-Za-z0-9\-\']+) (?<members>.+)";
-            string patternMember = @"@[A-Za-z0-9\-\']+";
+            string patternHP = @"[^0-9+\-*\/.]";
+            string patternDM = @"(-)?\d+(\.\d+)*";
 
-            string line = Console.ReadLine();
-            Dictionary<int, string> eventNames = new Dictionary<int, string>();
-            Dictionary<int, List<String>> eventMembers = new Dictionary<int, List<string>>();
-            while (line != "Time for Code")
+            string[] demons = Console.ReadLine().Split(new char[] { ',',' '}, StringSplitOptions.RemoveEmptyEntries).ToArray();
+            List<string> sortedDemons = new List<string>();
+
+           
+            
+            foreach (var demon in demons)
             {
-                Match matchEvent = Regex.Match(line, patternEvent);
-                if (matchEvent.Success)
+                double totalHP = 0;
+                foreach (Match match in Regex.Matches(demon, patternHP))
                 {
-                    int id = int.Parse(matchEvent.Groups["id"].Value);
-                    string name = matchEvent.Groups["name"].Value;
-                    string members = matchEvent.Groups["members"].Value;
-
-                    List<string> membersList = new List<string>();
-                    foreach (Match member in Regex.Matches(members, patternMember))
+                    if (match.Success)
                     {
-                        if (member.Success)
-                        {
-                            membersList.Add(member.Value);
-                        }
-                    }
-                    if (eventNames.ContainsKey(id) == false)
-                    {
-                        eventNames.Add(id, name);
-                        eventMembers.Add(id, membersList);
-                    }
-                    else
-                    {
-                        if (eventNames[id] == name)
-                        {
-                            eventMembers[id].AddRange(membersList);
-                        }
+                        totalHP += match.Value[0];
                     }
                 }
-                    line = Console.ReadLine();
-            }
-            foreach (var @event in eventMembers.OrderByDescending(x=>x.Value.Count).ThenBy(x=>eventNames[x.Key]))
-            {
-                Console.WriteLine($"{eventNames[@event.Key]} - {@event.Value.Distinct().ToArray().Length}");
-                foreach (var member in @event.Value.Distinct().OrderBy(x=>x))
+                double totalDM = 0;
+                //Console.WriteLine(totalHP);
+                foreach (Match number in Regex.Matches(demon, patternDM))
                 {
-                    Console.WriteLine(member);
+                    if (number.Success)
+                    {
+                        totalDM += double.Parse(number.Value);
+                    }
                 }
+
+                var multiplication = demon.Where(x => x == '*').ToArray();
+                var division = demon.Where(x => x == '/').ToArray();
+
+                totalDM = totalDM * (Math.Pow(2, multiplication.Length));
+                totalDM = totalDM / (Math.Pow(2, division.Length));
+                //Console.WriteLine(totalDM);
+
+                string result = $"{demon} - {totalHP} health, {totalDM:f2} damage";
+
+                sortedDemons.Add(result);
             }
+
+            sortedDemons = sortedDemons.OrderBy(x => x).ToList();
+            
+
+            foreach (var demon in sortedDemons)
+            {
+                Console.WriteLine(demon);
+            }
+
+
         }
     }
 }
+
 ```
