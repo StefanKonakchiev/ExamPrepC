@@ -14,7 +14,7 @@ namespace Roli
             //key -> ID
             //VALUE -> NAME -> PARTICIPANT
             //•	{id} #{eventName} @{participant1} @{participant2} … @{participantN}
-            string patternEvent = @"(?<id>\d+) #(?<name>[A-Za-z0-9\-\']+) (?<members>.+)";
+            string patternEvent = @"(?<id>\d+) #(?<name>[A-Za-z0-9\-\']+)( (?<members>.+))?";
             string patternMember = @"@[A-Za-z0-9\-\']+";
 
             string line = Console.ReadLine();
@@ -67,4 +67,5 @@ namespace Roli
         }
     }
 }
+
 ```
