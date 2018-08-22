@@ -4,7 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-
+```
+``` javascript
 namespace Roli
 {
     class Program
@@ -50,12 +51,9 @@ namespace Roli
                             eventMembers[id].AddRange(membersList);
                         }
                     }
-
-
                 }
                     line = Console.ReadLine();
             }
-
             foreach (var @event in eventMembers.OrderByDescending(x=>x.Value.Count).ThenBy(x=>eventNames[x.Key]))
             {
                 Console.WriteLine($"{eventNames[@event.Key]} - {@event.Value.Distinct().ToArray().Length}");
@@ -64,7 +62,6 @@ namespace Roli
                     Console.WriteLine(member);
                 }
             }
-
         }
     }
 }
