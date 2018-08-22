@@ -14,7 +14,7 @@ namespace Roli
             //key -> ID
             //VALUE -> NAME -> PARTICIPANT
             //•	{id} #{eventName} @{participant1} @{participant2} … @{participantN}
-            string patternEvent = @"(?<id>\d+) #(?<name>[A-Za-z0-9\-\']+)( (?<members>.+))?";
+            string patternEvent = @"(?<id>.*\d+)\s*#(?<name>[A-Za-z0-9\-\']+)(\s*(?<members>.+))?";
             string patternMember = @"@[A-Za-z0-9\-\']+";
 
             string line = Console.ReadLine();
@@ -55,10 +55,15 @@ namespace Roli
                     line = Console.ReadLine();
             }
 
-            foreach (var @event in eventMembers.OrderByDescending(x=>x.Value.Count).ThenBy(x=>eventNames[x.Key]))
+            foreach (var @event in eventMembers
+                .OrderByDescending(x=>x.Value.Distinct().ToList().Count)
+                .ThenBy(x=>eventNames[x.Key]))
             {
                 Console.WriteLine($"{eventNames[@event.Key]} - {@event.Value.Distinct().ToArray().Length}");
-                foreach (var member in @event.Value.Distinct().OrderBy(x=>x))
+                foreach (var member in @event
+                    .Value
+                    .Distinct()
+                    .OrderBy(x=>x))
                 {
                     Console.WriteLine(member);
                 }
